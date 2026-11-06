@@ -42,3 +42,19 @@ To post my code and dev log, I needed to make a GitHub account, and honestly I d
 
 I learned a little about GitHub, and I still need to learn more. I uploaded my files manually, which is fine for now, but later I will use command lines. I'm trying to follow good habits by writing a README and a requirements file so anyone can install what's needed to run the program.
 I also added a `.gitignore`, a file that tells git which files not to upload. I already knew that `.env` is usually where you store your API keys, so it should never be uploaded. I had seen `__pycache__` before, and now I know it's a folder Python creates automatically when you run your code. It stores compiled versions of your files so they load faster, so it's clutter that doesn't belong in the repo. I also learned that `.venv` is a virtual environment, which keeps each project's dependencies separate from the others and from my global Python.
+
+## Day 2
+
+I converted the output from a txt file to a CSV file. It's quite similar to txt, but I had to import `csv` as well as `os`. What makes CSV easier is that I don't have to loop through the list that holds my dictionaries, because `writerows` writes them all at once.
+
+`DictWriter` takes a list of field names for the header, and it needs to match the keys in your dictionaries. I also wrote a line of code that checks whether the file exists, so the header is written only once instead of on every new page.
+
+To avoid appending the same data every time I run the program, I check whether the file exists and delete it before running. This way I won't get duplicates.
+
+I also learned that `encoding="utf-8"` isn't enough for CSV files, because programs like Excel won't read them correctly. You need to use `utf-8-sig`, which adds a small marker at the start of the file that tells Excel the encoding.
+
+### What broke
+
+- Re-running the script appended the same 1000 books again, because append mode keeps the old content.
+- I made a typo in a filename (`book.csv` instead of `books.csv`), which created a second empty file.
+- Creating the file early made the "does the file exist?" check think the header had already been written, which is why I went with deleting the old file instead.
