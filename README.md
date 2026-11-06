@@ -21,7 +21,7 @@ python scraper.py
 
 ## Planned
 
-- [ ] Save results to CSV
+- [x] Save results to CSV
 - [ ] Reuse the scraper on a second practice site
 - [ ] Scrape real supplier listings (price, MOQ, supplier name, years active, verified status)
 - [ ] Handle dynamic (JavaScript) pages
