@@ -10,7 +10,7 @@ I have experience finding products for clients and presenting them good prices. 
 ## Current status
 
 - Scrapes the title, price, currency and link of every book on [books.toscrape.com](https://books.toscrape.com/), following pagination across all 50 pages
-- Saves the results to `books.txt`
+- Saves the results to `books.csv`
 
 ## How to run
 
