@@ -1,17 +1,24 @@
 from bs4 import BeautifulSoup
-import requests
 from urllib.parse import urljoin
+import requests
+import csv
 import time
+import os
 
-
+file_name = "books.csv"
 url = "https://books.toscrape.com/"
 
+
+#-------------- the page scraper ----------------------
+
 def scrape_page(url):
+
     response = requests.get(url, timeout=10)
     response.raise_for_status() 
     response.encoding = "utf-8"
     soup = BeautifulSoup(response.text, 'lxml')
     articles = soup.find_all("article", class_= "product_pod")
+
     books = []
     for article in articles:
         book_name = article.h3.a["title"]
@@ -23,6 +30,9 @@ def scrape_page(url):
     
         books.append({"title": book_name, "price": book_price, "currency": price_currency, "link": book_link})
 
+
+#-------------- next page navigation ----------------------
+
     next_button = soup.find("li", class_="next")
     if next_button:
         next_url = urljoin(url, next_button.a["href"])
@@ -31,28 +41,27 @@ def scrape_page(url):
 
     return books, next_url
 
-def write_books(books, counter):
-    with open("books.txt", "a", encoding="utf-8") as file:     
-        for book in books:
-            counter +=1
-            file.write(f"------------Book {counter}--------------\n")
-            file.write("\n")
-            file.write(f"Book Title: {book['title']}\n")
-            file.write(f"Book Price: {book['currency'] + str(book['price'])}\n")
-            file.write(f"Book Link: {book['link']}\n")
-            file.write("\n")
-    
-    return counter  
+#-------------- creation and insertion of the book data  ----------------------
+def write_books(books):
+    field_names = ["title", "price" ,"currency" , "link"]
+    file_exists = os.path.exists(file_name)
+    with open(file_name, mode='a', newline='', encoding='utf-8-sig') as csvfile:  
+        writer = csv.DictWriter(csvfile, fieldnames=field_names)
+
+        if not file_exists:
+            writer.writeheader()
+
+        writer.writerows(books)  
      
 def fetch_books(url):
-    counter = 0
-    with open("books.txt", "w", encoding= "utf-8") as file:
-        pass
+#-------------- main loop to execute the functions on each books page  ----------------------
+    if os.path.exists(file_name):
+        os.remove(file_name)
 
     while url:
         try:
             books, url = scrape_page(url)
-            counter = write_books(books,counter)
+            write_books(books)
 
             time.sleep(1)
     
@@ -63,8 +72,6 @@ def fetch_books(url):
             print(f"A network error occurred: {err}")
             break
             
-    with open("books.txt", "a", encoding="utf-8") as file:
-        file.write(f"Total amount of books: {counter}\n")
     
 
 if __name__ == "__main__":
