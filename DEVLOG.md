@@ -58,3 +58,22 @@ I also learned that `encoding="utf-8"` isn't enough for CSV files, because progr
 - Re-running the script appended the same 1000 books again, because append mode keeps the old content.
 - I made a typo in a filename (`book.csv` instead of `books.csv`), which created a second empty file.
 - Creating the file early made the "does the file exist?" check think the header had already been written, which is why I went with deleting the old file instead.
+
+## Day 3
+
+I'm back, and I wasn't expecting navigation to cause me so many problems. I had to rewrite the whole program twice because it got so confusing, but in the end I made it work.
+
+What made it extra difficult is that the website I'm scraping now has a sidebar, and some sidebar items don't show unless you visit their parent item. At first I planned to navigate by checking whether each item had child anchor tags and going back once I reached a certain depth. It worked for a bit, but it was confusing and didn't work as well as I wanted.
+
+So now I save all the parent links, visit each parent, and save the children in a list without duplicates. Then I merge everything into one list of pages to scrape.
+
+Some pages also have pagination. After I scrape a sidebar page, I check whether it has pagination. If it does, I follow the "next" links until there are no more, then go back to the sidebar and move on to the next page.
+
+### What broke
+
+- Parent category pages include the products of their subcategories (for example, Computers includes everything from Laptops), so the same products were saved twice. I fixed it by remembering the links I'd already saved and skipping repeats.
+- My first approach to navigation was too complicated, so I rewrote it.
+
+### Next
+
+Since I'm pushing code almost every day, I want to take some time to properly learn git. Uploading files by hand defeats the purpose of using GitHub.
